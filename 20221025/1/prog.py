@@ -1,14 +1,22 @@
-from itertools import dropwhile, islice
+def fib(m, n):
+	f = 1
+	s = 1
+	fib = 2
+	i = 2
+	while i != n:
+		fib = f + s
+		f = s
+		s = fib
+		i += 1
+	for k in range(n):
+		yield fib
+		fib = f + s
+		f = s
+		s = fib
 
-# def dsum():
-# 	i = 1
-# 	s = 0
-# 	while(1):
-# 		s += 1 / (i**2)
-# 		yield s
-# 		i += 1
 
-# print(*islice(dropwhile(lambda x: x <= 1.6, dsum()), 10))
+print(*fib(4, 5))
 
 
-for 
+
+
