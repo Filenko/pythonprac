@@ -15,7 +15,7 @@ def fib(m, n):
 		s = fib
 
 
-print(*fib(4, 5))
+
 
 
 
