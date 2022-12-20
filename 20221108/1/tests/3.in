@@ -1,0 +1,5 @@
+a = DivStr('lolkekcheburek')
+b = DivStr('keklolorbidol')
+print(*(a % 8 + b % 10) // 4)
+print(*(a + b + a) // 17)
+print((a * 2 + b * 4) % 22)

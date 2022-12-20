@@ -1,0 +1,15 @@
+from itertools import accumulate
+
+
+class Boba(metaclass=dump):
+    def __init__(self, *args, **kwargs):
+        print(args, kwargs)
+        self.a = len(args)
+        self.b = len(kwargs) + self.a
+
+    def __iter__(self):
+        return accumulate([self.a, self.b])
+
+
+a = Boba(1, 2, 3, 4, 5, c=2, d=3)
+print(sum(a))

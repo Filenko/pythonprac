@@ -1,0 +1,8 @@
+a = DivStr('zxcvbnhfgtrhehois')
+print(*a//2)
+for s in a // 2:
+	print(s % 3)
+b = DivStr('aoaoaooa mmmmmmmm')
+for s in a // 2:
+	for l in b // 3:
+		print((s + l) % 5)

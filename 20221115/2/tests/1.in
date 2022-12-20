@@ -1,0 +1,11 @@
+class C:
+  num1 = Num()
+  num2 = Num()
+  
+print(C().num1)
+c, d = C(), C()
+c.num2 += 3
+print(c.num2, c.num1, d.num1, d.num2)
+d.num1 = 'fgfyktyf'
+d.num2 = [1,8,9,5,3]
+print(c.num2 + c.num1 + d.num1 + d.num2)

@@ -1,0 +1,8 @@
+s = p = k = Omnibus()
+s.l = p.l = k.i = 'yo'
+p.s = 12348
+s.s = type(s)
+print(p.l, s.s, k.i)
+del p.s
+del s.s
+print(k.s)

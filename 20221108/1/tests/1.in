@@ -1,0 +1,4 @@
+a = DivStr('jhbuyBUBBSObbnbdnuh')
+d = DivStr('bruhbruhbruhbruhbruhbruhbruhbruhbruhbruhbruh')
+print(d % 17 + d % 13 + d % 11 + a % 7 + a % 5)
+print(*a // 4, *d % 14 // 2)

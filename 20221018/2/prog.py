@@ -2,8 +2,9 @@ from math import *
 i = 0
 fns = {}
 fns["quit"] = ["fstr", "fstr.format(i, len(fns))"]
-while s := input():
+while (s := input().split())[0] != "quit":
     i += 1
+    s = " ".join(s)
     if s[0] == ':':
         t = s.split()
         fns[t[0][1:]] = t[1:]

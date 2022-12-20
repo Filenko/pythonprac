@@ -1,0 +1,12 @@
+class A(metaclass=dump):
+    pass
+
+
+class B(A):
+    @staticmethod
+    def print(_, b):
+        print(b ** 2)
+
+
+a = B()
+a.print(1)

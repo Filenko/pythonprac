@@ -1,0 +1,19 @@
+class C(metaclass=check):
+		A: dict
+		B: str = "QQ"
+		C: float
+
+c = C()
+print(c.check_annotations())
+c.A = "ZZ"
+print(c.check_annotations())
+c.C = [100500, 42, 0]
+print(c.check_annotations())
+c.B = type("Boo",(str,),{})(42)
+print(c.check_annotations())
+c.A = ('11', 'asdf', '1234')
+print(c.check_annotations())
+c.A = {11: '123', 'asdf': 1234}
+print(c.check_annotations())
+c.B = '555'
+print(c.check_annotations())

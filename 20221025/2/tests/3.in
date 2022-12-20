@@ -1,0 +1,1 @@
+print(*list(slide(itt.accumulate([7, 3, 9, 5, 78, 19, 35, 28, 7, 1, 343, 228]), 114)))

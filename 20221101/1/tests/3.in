@@ -1,0 +1,14 @@
+q, w, e = Omnibus(), Omnibus(), Omnibus()
+r = t = y = Omnibus()
+q.s = 'qs'
+w.s = 'ls'
+r.s = 'ps'
+t.s = 'cs'
+w.s = e.s = 'es'
+print(r.s)
+del q.s
+print(r.s)
+del w.s
+print(r.s)
+del e.s
+print(r.s)

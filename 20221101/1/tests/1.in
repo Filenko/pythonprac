@@ -1,0 +1,7 @@
+s = Omnibus()
+s.a = s.c = s.b = 345
+b = Omnibus()
+print(b.a)
+del b.b
+del b.s
+print(s.a, s.c, s.b) 

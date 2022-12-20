@@ -1,0 +1,12 @@
+def fib():
+	cur, next = 1, 1
+	while True:
+		yield cur
+		cur, next = next, cur + next
+
+i = slide(fib(), 7)
+s = next(i)
+while s <= 59:
+	print(s, end=' ')
+	s = next(i)
+print()

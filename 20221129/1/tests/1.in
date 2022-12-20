@@ -1,0 +1,13 @@
+class C(metaclass=dump):
+	def __init__(self, val):
+		self.val = val + 13
+
+	def pr_pls(self):
+		print('Your welcome!', self.val)
+
+	def add_s(self, s):
+		setattr(self, 's', s)
+
+c = C(10)
+c.pr_pls()
+c.add_s(':)')

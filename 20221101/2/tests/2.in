@@ -1,0 +1,13 @@
+A = Triangle((0,0), (0,1), (-1,0))
+B = Triangle((1,-1), (0,2), (-2,0))
+C = Triangle((3,-3), (-4,0), (0,3))
+print(A in B, A in C, B in C, C in A)
+if A < C:
+	print('A - малепусик')
+else:
+	print('C - малепусик')
+print(abs(A), abs(B), abs(C))
+if A & B and A & C and B & C:
+	print('Your my friend now turutututu')
+if bool(B):
+	print('B B B B B B B its B B B yo')

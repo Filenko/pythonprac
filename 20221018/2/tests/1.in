@@ -1,0 +1,10 @@
+:cat "meow"
+:e^ x exp(x)
+cat
+cat
+e^ 3
+:len s len(s)
+:foo x y z w exp(e)+w-sin(z/y)
+len "qqqyaqq"
+foo 1 2 3 4
+quit "Super{}, class{}"

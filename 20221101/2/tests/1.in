@@ -1,0 +1,20 @@
+A = Triangle((1,5), (-1,3), (-3,1))
+B = Triangle((-2,-1), (-4,-3), (-2,-4))
+C = Triangle((2,3), (3,-3), (-2,-1))
+print(round(abs(A), 3), round(abs(B), 3), round(abs(C), 3))
+if bool(A):
+	print('A exists')
+else:
+	print('A doesn\'t exist')
+if bool(B):
+	print('B exists')
+print(A in B, A in C, B in C, C in B)
+print(A & B, A & C, B & C)
+if A < C:
+	print(100)
+else:
+	print(500)
+if B < A:
+	print(100500)
+else:
+	print('Max')

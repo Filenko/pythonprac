@@ -1,0 +1,16 @@
+@objcount
+class C:
+	def __init__(self):
+		print('Hello!')
+
+	def __del__(self):
+		print('Bye')
+
+c = C()
+d, e = C(), C()
+print(C.counter)
+c = 100500
+print(C.counter)
+f = C()
+del e
+print(C.counter)
