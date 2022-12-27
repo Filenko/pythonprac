@@ -1,0 +1,11 @@
+try:
+	alp = Alpha(pp=3, c=10, z=2, a=42)
+except AttributeError:
+	print('ОШИБКА')
+
+alp = Alpha(c=5, z=4, b=8)
+alp.e = 123
+print(alp)
+alq = AlphaQ(c=10, z=2, a=42)
+alq.e = 123
+print(alq)

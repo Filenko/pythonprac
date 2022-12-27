@@ -1,3 +1,5 @@
+from math import *
+
 inp = input().split()
 W, H, a, b = int(inp[0]), int(inp[1]), float(inp[2]), float(inp[3])
 f = inp[4]

@@ -1,0 +1,14 @@
+from datetime import datetime
+
+start = datetime.now()
+alp = Alpha(c=10, z=2, a=42)
+diff_alpha = datetime.now() - start
+
+start = datetime.now()
+alq = AlphaQ(c=10, z=2, a=42)
+alq.e = 123
+print(alq)
+diff_alpha_q = datetime.now() - start
+
+assert(diff_alpha <= diff_alpha_q)
+print('Works correctly!')
