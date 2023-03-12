@@ -16,6 +16,8 @@ def move(direction):
 
 
 def addmon(x, y, name, hello):
+    if name not in cowsay.list_cows():
+        print("Cannot add unknown monster")
     global field
     wasMonsterHere = field[x][y]
     field[x][y] = hello, name
@@ -27,7 +29,7 @@ def addmon(x, y, name, hello):
 def encounter():
     global field, pos
     if field[pos[0]][pos[1]]:
-        print(cowsay.cowsay(field[pos[0]][pos[1]][0]))
+        print(cowsay.cowsay(field[pos[0]][pos[1]][0], cow=field[pos[0]][pos[1]][1]))
 
 
 while s := input():
