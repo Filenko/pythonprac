@@ -18,9 +18,10 @@ def move(direction):
 def addmon(x, y, name, hello):
     if name not in cowsay.list_cows():
         print("Cannot add unknown monster")
+        return
     global field
     wasMonsterHere = field[x][y]
-    field[x][y] = hello, name
+    field[x][y] = {"greeting" : hello,"name" : name}
     print(f"Added monster {name} to {x}, {y} saying {hello}")
     if wasMonsterHere:
         print("Replaced the old monster")
@@ -29,7 +30,7 @@ def addmon(x, y, name, hello):
 def encounter():
     global field, pos
     if field[pos[0]][pos[1]]:
-        print(cowsay.cowsay(field[pos[0]][pos[1]][0], cow=field[pos[0]][pos[1]][1]))
+        print(cowsay.cowsay(field[pos[0]][pos[1]]["greeting"], cow=field[pos[0]][pos[1]]["name"]))
 
 
 while s := input():
@@ -37,10 +38,10 @@ while s := input():
         case ["up" | "down" | "left" | "right"]:
             move(s.split()[0])
             encounter()
-        case ["addmon", name, x, y, hello]:
+        case [name, "addmon", x, y, hello]:
             if not str.isdigit(x) or not str.isdigit(y):
                 print("Invalid arguments!")
             else:
-                addmon(int(x), int(y), hello)
+                addmon(int(x), int(y), name, hello)
         case _:
             print("Invalid arguments!")
