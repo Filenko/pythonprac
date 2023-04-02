@@ -1,4 +1,5 @@
 import cowsay
+import shlex
 
 pos = 0, 0
 field = [[None for i in range(10)] for j in range(10)]
@@ -15,13 +16,13 @@ def move(direction):
     print(f"Moved to {pos}")
 
 
-def addmon(x, y, name, hello):
+def addmon(x, y, name, hello, hp):
     if name not in cowsay.list_cows():
         print("Cannot add unknown monster")
         return
     global field
     wasMonsterHere = field[x][y]
-    field[x][y] = {"greeting" : hello,"name" : name}
+    field[x][y] = {"greeting" : hello,"name" : name, "hp" : hp}
     print(f"Added monster {name} to {x}, {y} saying {hello}")
     if wasMonsterHere:
         print("Replaced the old monster")
@@ -34,14 +35,27 @@ def encounter():
 
 
 while s := input():
-    match s.split():
+    match shlex.split(s):
         case ["up" | "down" | "left" | "right"]:
             move(s.split()[0])
             encounter()
-        case [name, "addmon", x, y, hello]:
-            if not str.isdigit(x) or not str.isdigit(y):
+        case ["addmon", name, *args]:
+            if len(args) != 7:
                 print("Invalid arguments!")
-            else:
-                addmon(int(x), int(y), name, hello)
+                continue
+            requiredArguments = ["hello", "hp", "coords"]
+            flag = False
+            for argument in requiredArguments:
+                if argument not in args:
+                    flag = True
+                    break
+            if flag:
+                print("Invalid arguments!")
+                continue
+
+            x,y = args[args.index("coords") + 1], args[args.index("coords") + 2]
+            hp = args[args.index("hp") + 1]
+            hello = args[args.index("hello") + 1]
+            addmon(int(x), int(y), name, hello, hp)
         case _:
             print("Invalid arguments!")
