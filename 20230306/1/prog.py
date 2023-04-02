@@ -22,6 +22,8 @@ $the_cow = <<EOC;
 EOC
 """))
 
+userMonsters = {"jgsbat": jgsbat}
+
 
 def move(direction):
     global pos
@@ -69,11 +71,11 @@ def parse_addmon_arguments(args):
     return int(x), int(y), hello, int(hp)
 
 
-def attack():
+def attack(name):
     global field, pos
     curPosField = field[pos[0]][pos[1]]
-    if curPosField is None:
-        print("No monster here")
+    if curPosField is None or curPosField["name"] != name:
+        print(f'No {name} here')
         return
 
     damage = 10
@@ -119,7 +121,15 @@ class MUD(cmd.Cmd):
             addmon(x, y, name, hello, hp)
 
     def do_attack(self, args):
-        attack()
+        args = shlex.split(args)
+        if args and args[0]:
+            name = args[0]
+        attack(name)
+
+    def complete_attack(self, text, line, begidx, endidx):
+        return [name for name in (cowsay.list_cows() + list(userMonsters.keys())) if name.startswith(text)]
+
+
 
 
 MUD().cmdloop()
