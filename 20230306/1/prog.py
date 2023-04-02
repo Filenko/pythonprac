@@ -7,7 +7,6 @@ pos = 0, 0
 field = [[None for i in range(10)] for j in range(10)]
 weapons = {"sword": 10, "spear": 15, "axe": 20}
 
-
 jgsbat = cowsay.read_dot_cow(StringIO(r"""
 $the_cow = <<EOC;
          $thoughts
@@ -23,6 +22,8 @@ $the_cow = <<EOC;
          (((""`  `"")))
 EOC
 """))
+
+userMonsters = {"jgsbat": jgsbat}
 
 
 def move(direction):
@@ -71,11 +72,11 @@ def parse_addmon_arguments(args):
     return int(x), int(y), hello, int(hp)
 
 
-def attack(weapon):
+def attack(name, weapon):
     global field, pos
     curPosField = field[pos[0]][pos[1]]
-    if curPosField is None:
-        print("No monster here")
+    if curPosField is None or curPosField["name"] != name:
+        print(f'No {name} here')
         return
 
     damage = weapons[weapon]
@@ -122,7 +123,7 @@ class MUD(cmd.Cmd):
 
     def do_attack(self, args):
 
-        args = shlex.split(args)
+        name, *args = shlex.split(args)
         weapon = "sword"
         if args and args[0] == "with":
             if args[1] in weapons:
@@ -130,19 +131,16 @@ class MUD(cmd.Cmd):
             else:
                 print("Unknown weapon")
                 return
-
-        attack(weapon)
+        attack(name, weapon)
 
     def complete_attack(self, text, line, begidx, endidx):
 
         if (not text and len(shlex.split(line)) == 1) or (text and len(shlex.split(line)) == 2):
-            return ["with"]
+            return [name for name in (cowsay.list_cows() + list(userMonsters.keys())) if name.startswith(text)]
         elif (not text and len(shlex.split(line)) == 2) or (text and len(shlex.split(line)) == 3):
+            return ["with"]
+        elif (not text and len(shlex.split(line)) == 3) or (text and len(shlex.split(line)) == 4):
             return [w for w in weapons if w.startswith(text)]
 
 
-
-
-
 MUD().cmdloop()
-
