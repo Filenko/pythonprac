@@ -1,9 +1,6 @@
 import cowsay
-<<<<<<< HEAD
 from io import StringIO
-=======
 import shlex
->>>>>>> a8d289e (Add hp and shlex parse)
 
 pos = 0, 0
 field = [[None for i in range(10)] for j in range(10)]
