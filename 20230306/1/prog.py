@@ -5,6 +5,8 @@ import cmd
 
 pos = 0, 0
 field = [[None for i in range(10)] for j in range(10)]
+weapons = {"sword": 10, "spear": 15, "axe": 20}
+
 
 jgsbat = cowsay.read_dot_cow(StringIO(r"""
 $the_cow = <<EOC;
@@ -69,18 +71,18 @@ def parse_addmon_arguments(args):
     return int(x), int(y), hello, int(hp)
 
 
-def attack():
+def attack(weapon):
     global field, pos
     curPosField = field[pos[0]][pos[1]]
     if curPosField is None:
         print("No monster here")
         return
 
-    damage = 10
+    damage = weapons[weapon]
     field[pos[0]][pos[1]]["hp"] -= damage
+    realDamage = damage if field[pos[0]][pos[1]]["hp"] >= 0 else damage - abs(field[pos[0]][pos[1]]["hp"])
 
-    print(
-        f'Attacked {field[pos[0]][pos[1]]["name"]}, damage {damage if field[pos[0]][pos[1]]["hp"] >= 0 else damage - abs(field[pos[0]][pos[1]]["hp"])} hp')
+    print(f'Attacked {field[pos[0]][pos[1]]["name"]}, damage {realDamage} hp')
     if field[pos[0]][pos[1]]["hp"] <= 0:
         print(f'{field[pos[0]][pos[1]]["name"]} died')
         field[pos[0]][pos[1]] = None
@@ -119,7 +121,17 @@ class MUD(cmd.Cmd):
             addmon(x, y, name, hello, hp)
 
     def do_attack(self, args):
-        attack()
+
+        args = shlex.split(args)
+        weapon = "sword"
+        if args and args[0] == "with":
+            if args[1] in weapons:
+                weapon = args[1]
+            else:
+                print("Unknown weapon")
+                return
+
+        attack(weapon)
 
 
 MUD().cmdloop()
