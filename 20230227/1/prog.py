@@ -1,7 +1,24 @@
 import cowsay
+from io import StringIO
 
 pos = 0, 0
 field = [[None for i in range(10)] for j in range(10)]
+
+jgsbat = cowsay.read_dot_cow(StringIO(r"""
+$the_cow = <<EOC;
+         $thoughts
+          $thoughts
+    ,_                    _,
+    ) '-._  ,_    _,  _.-' (
+    )  _.-'.|\\\\--//|.'-._  (
+     )'   .'\/o\/o\/'.   `(
+      ) .' . \====/ . '. (
+       )  / <<    >> \  (
+        '-._/``  ``\_.-'
+  jgs     __\\\\'--'//__
+         (((""`  `"")))
+EOC
+"""))
 
 
 def move(direction):
@@ -16,7 +33,8 @@ def move(direction):
 
 
 def addmon(x, y, name, hello):
-    if name not in cowsay.list_cows():
+    if name not in cowsay.list_cows() and name != "jqsbat":
+        print(name)
         print("Cannot add unknown monster")
         return
     global field
