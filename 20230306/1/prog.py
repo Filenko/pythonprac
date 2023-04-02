@@ -133,5 +133,16 @@ class MUD(cmd.Cmd):
 
         attack(weapon)
 
+    def complete_attack(self, text, line, begidx, endidx):
+
+        if (not text and len(shlex.split(line)) == 1) or (text and len(shlex.split(line)) == 2):
+            return ["with"]
+        elif (not text and len(shlex.split(line)) == 2) or (text and len(shlex.split(line)) == 3):
+            return [w for w in weapons if w.startswith(text)]
+
+
+
+
 
 MUD().cmdloop()
+
