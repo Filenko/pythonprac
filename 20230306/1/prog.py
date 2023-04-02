@@ -69,6 +69,25 @@ def parse_addmon_arguments(args):
     return int(x), int(y), hello, int(hp)
 
 
+def attack():
+    global field, pos
+    curPosField = field[pos[0]][pos[1]]
+    if curPosField is None:
+        print("No monster here")
+        return
+
+    damage = 10
+    field[pos[0]][pos[1]]["hp"] -= damage
+
+    print(
+        f'Attacked {field[pos[0]][pos[1]]["name"]}, damage {damage if field[pos[0]][pos[1]]["hp"] >= 0 else damage - abs(field[pos[0]][pos[1]]["hp"])} hp')
+    if field[pos[0]][pos[1]]["hp"] <= 0:
+        print(f'{field[pos[0]][pos[1]]["name"]} died')
+        field[pos[0]][pos[1]] = None
+    else:
+        print(f'{field[pos[0]][pos[1]]["name"]} now has {field[pos[0]][pos[1]]["hp"]}')
+
+
 class MUD(cmd.Cmd):
     intro = "<<< Welcome to Python-MUD 0.1 >>>"
     prompt = "> "
@@ -98,6 +117,9 @@ class MUD(cmd.Cmd):
         if args := parse_addmon_arguments(args):
             x, y, hello, hp = args
             addmon(x, y, name, hello, hp)
+
+    def do_attack(self, args):
+        attack()
 
 
 MUD().cmdloop()
