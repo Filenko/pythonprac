@@ -43,16 +43,12 @@ while s := input():
             if len(args) != 7:
                 print("Invalid arguments!")
                 continue
+
             requiredArguments = ["hello", "hp", "coords"]
-            flag = False
-            for argument in requiredArguments:
-                if argument not in args:
-                    flag = True
-                    break
-            if flag:
+            argumentsExist = [x in args for x in requiredArguments]
+            if not all(argumentsExist):
                 print("Invalid arguments!")
                 continue
-
             x,y = args[args.index("coords") + 1], args[args.index("coords") + 2]
             hp = args[args.index("hp") + 1]
             hello = args[args.index("hello") + 1]
