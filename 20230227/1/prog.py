@@ -50,7 +50,7 @@ def encounter():
     if field[pos[0]][pos[1]]:
         print(cowsay.cowsay(field[pos[0]][pos[1]]["greeting"], cow=field[pos[0]][pos[1]]["name"]))
 
-
+print("<<< Welcome to Python-MUD 0.1 >>>")
 while s := input():
     match s.split():
         case ["up" | "down" | "left" | "right"]:
