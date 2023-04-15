@@ -1,0 +1,123 @@
+From dc005617bc4ed63482d25f6ab46b441c6ba487c8 Mon Sep 17 00:00:00 2001
+From: timofey <timofey.filenko@yandex.ru>
+Date: Sat, 15 Apr 2023 20:49:19 +0300
+Subject: [PATCH 3/3] Client v0.1
+
+---
+ 20230313/1/client.py | 64 +++++++++++++++++++++++++++++++++++---------
+ 1 file changed, 51 insertions(+), 13 deletions(-)
+
+diff --git a/20230313/1/client.py b/20230313/1/client.py
+index 1c52fc7..dceee9e 100644
+--- a/20230313/1/client.py
++++ b/20230313/1/client.py
+@@ -1,42 +1,74 @@
+ import asyncio
+ import socket
++import shlex
++import cmd
++
++import cowsay
+ 
+ pos = 0, 0
+ field = [[None for i in range(10)] for j in range(10)]
+ weapons = {"sword": 10, "spear": 15, "axe": 20}
+ userMonsters = {"jgsbat"}
++def parse_addmon_arguments(args):
++    if len(args) != 7:
++        print("Invalid arguments!")
++        return None
++
++    requiredArguments = ["hello", "hp", "coords"]
++    argumentsExist = [x in args for x in requiredArguments]
++    if not all(argumentsExist):
++        print("Invalid arguments!")
++        return None
++    x, y = args[args.index("coords") + 1], args[args.index("coords") + 2]
++    hp = args[args.index("hp") + 1]
++    hello = args[args.index("hello") + 1]
++
++    return int(x), int(y), hello, int(hp)
++
++def request(s):
++    global socketCow
++    socketCow.send(f"{s}\n".encode())
++    ans = socketCow.recv(1024).decode().strip()
++    for l in ans.split("\n"):
++        if l.startswith("SAY"):
++            l = l.split()
++            say = l[0]
++            name = l[1]
++            msg = " ".join(l[2:])
++            if name in cowsay.list_cows():
++                print(cowsay.cowsay(msg, cow=name))
++            elif name in userMonsters:
++                print(cowsay.cowsay(msg, cowfile=userMonsters[name]))
++        else:
++            print(l)
++
+ class MUD(cmd.Cmd):
+     intro = "<<< Welcome to Python-MUD 0.1 >>>"
+     prompt = "> "
+ 
+     def do_up(self, args):
+-        move("up")
+-        encounter()
++        request("move 0 -1")
++
+ 
+     def do_down(self, args):
+-        move("down")
+-        encounter()
++        request("move 0 1")
+ 
+     def do_left(self, args):
+-        move("left")
+-        encounter()
++        request("move -1 0")
+ 
+     def do_right(self, args):
+-        move("right")
+-        encounter()
++        request("move 1 0")
+ 
+     def do_addmon(self, args):
+         if len(args) < 3:
+             print("Invalid arguments!")
+             return
+-
+         name, *args = shlex.split(args)
+         if args := parse_addmon_arguments(args):
+             x, y, hello, hp = args
+-            addmon(x, y, name, hello, hp)
++            request(f"addmon {x} {y} {name} {hp} {hello}")
+ 
+     def do_attack(self, args):
+-
+         name, *args = shlex.split(args)
+         weapon = "sword"
+         if args and args[0] == "with":
+@@ -45,7 +77,8 @@ class MUD(cmd.Cmd):
+             else:
+                 print("Unknown weapon")
+                 return
+-        attack(name, weapon)
++
++        request(f"attack {name} {weapon}")
+ 
+     def complete_attack(self, text, line, begidx, endidx):
+ 
+@@ -57,4 +90,9 @@ class MUD(cmd.Cmd):
+             return [w for w in weapons if w.startswith(text)]
+ 
+ 
+-MUD().cmdloop()
++with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as socketCow:
++    socketCow.connect(("0.0.0.0", 1234))
++    MUD().cmdloop()
++
++
++
+-- 
+2.37.1 (Apple Git-137.1)
+
