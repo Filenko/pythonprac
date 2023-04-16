@@ -5,8 +5,6 @@ import cmd
 
 import cowsay
 
-pos = 0, 0
-field = [[None for i in range(10)] for j in range(10)]
 weapons = {"sword": 10, "spear": 15, "axe": 20}
 userMonsters = {"jgsbat"}
 def parse_addmon_arguments(args):
