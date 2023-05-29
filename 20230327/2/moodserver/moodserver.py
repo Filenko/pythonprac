@@ -22,21 +22,29 @@ EOC
 
 clients = {}
 nicknames = {}
-pos = 0, 0
-field = [[None for i in range(10)] for j in range(10)]
+positions = {}
+monsters = []
 weapons = {"sword": 10, "spear": 15, "axe": 20}
 userMonsters = {"jgsbat": jgsbat}
 
 
-def move(xDir, yDir):
+# monsters = [{pos: (0,0), hp: int, hello: string}]
+
+def checkMonsters(pos):
+    global monsters
+    for monster in enumerate(monsters):
+        if monster[1]["pos"] == pos:
+            return monster[0]
+    return -1
+def move(xDir, yDir, pos):
     """Move to right by xDir and to left by yDir."""
-    global pos
     x = pos[0] + xDir
     x += 10 if x < 0 else 0 + -10 if x > 9 else 0
     y = pos[1] + yDir
     y += 10 if y < 0 else 0 + -10 if y > 9 else 0
-    pos = x, y
-    return [f"Moved to {pos}"]
+    pos = (x, y)
+    return [f"Moved to {pos}", pos]
+
 
 
 def addmon(x, y, name, hello, hp):
@@ -47,51 +55,59 @@ def addmon(x, y, name, hello, hp):
         response.append("Cannot add unknown monster")
         sendAll = False
 
-    global field
-    wasMonsterHere = field[x][y]
-    field[x][y] = {"greeting": hello, "name": name, "hp": hp}
+    global monsters
+    monsterHere = checkMonsters((x,y))
+
+    if monsterHere != -1:
+        monsters[monsterHere] = {"greeting": hello, "name": name, "hp": hp, "pos": (x,y)}
+    else:
+        monsters.append({"pos":(x,y),"greeting": hello, "name": name, "hp": hp})
+
     response.append(f"Added monster {name} to {x}, {y} saying {hello}")
-    if wasMonsterHere:
+    if monsterHere != -1:
         response.append("Replaced the old monster")
         sendAll = False
 
     return response, sendAll
 
 
-def encounter():
+def encounter(pos):
     """Check if here is monster and return its message."""
-    global field, pos
-    if field[pos[0]][pos[1]]:
-        hello = field[pos[0]][pos[1]]["greeting"]
-        name = field[pos[0]][pos[1]]["name"]
+    global monsters
+
+    if (monsterId := checkMonsters(pos)) != -1:
+        hello = monsters[monsterId]["greeting"]
+        name = monsters[monsterId]["name"]
         if name in cowsay.list_cows():
             return cowsay.cowsay(hello, cow=name)
         if name in cowsay.list_cows():
             return cowsay.cowsay(hello, cowfile=userMonsters[name])
+    else:
+        print(f"NO MONSTER AT {pos}")
     return None
 
 
-def attack(name, weapon):
+def attack(name, weapon, pos):
     """Attack monster with different weapons (damage)."""
-    global field, pos
-    curPosField = field[pos[0]][pos[1]]
+    global monsters
+    monsterHere = checkMonsters(pos)
     response = []
     sendAll = True
-    if curPosField is None or curPosField["name"] != name:
+    if (monsterHere == -1) or (monsters[monsterHere]["name"] != name):
         response.append(f'No {name} here')
         sendAll = False
         return response, sendAll
 
     damage = weapons[weapon]
-    field[pos[0]][pos[1]]["hp"] -= damage
-    realDamage = damage if field[pos[0]][pos[1]]["hp"] >= 0 else damage - abs(field[pos[0]][pos[1]]["hp"])
+    monsters[monsterHere]["hp"] -= damage
+    realDamage = damage if monsters[monsterHere]["hp"] >= 0 else damage - abs(monsters[monsterHere]["hp"])
 
-    response.append(f'Attacked {field[pos[0]][pos[1]]["name"]}, damage {realDamage} hp')
-    if field[pos[0]][pos[1]]["hp"] <= 0:
-        response.append(f'{field[pos[0]][pos[1]]["name"]} died')
-        field[pos[0]][pos[1]] = None
+    response.append(f'Attacked {monsters[monsterHere]["name"]}, damage {realDamage} hp')
+    if monsters[monsterHere]["hp"] <= 0:
+        response.append(f'{monsters[monsterHere]["name"]} died')
+        monsters.pop(monsterHere)
     else:
-        response.append(f'{field[pos[0]][pos[1]]["name"]} now has {field[pos[0]][pos[1]]["hp"]}')
+        response.append(f'{monsters[monsterHere]["name"]} now has {monsters[monsterHere]["hp"]}')
 
     return response, sendAll
 
@@ -124,10 +140,14 @@ async def MUDhandler(reader, writer):
                             await sendMessage("This nickname is already taken!", me)
                         else:
                             nicknames[me] = nickname
+                            positions[me] = (0,0)
                             await sendMessage(f"{nickname} join to MUD")
                     case ["move", x, y]:
-                        req = move(int(x), int(y))
-                        if e := encounter():
+                        req, newPos = move(int(x), int(y), positions[me])
+                        req = [req]
+                        positions[me] = newPos
+                        print(f"{nicknames[me]} NEWPOS", newPos)
+                        if e := encounter(newPos):
                             req.append(e)
                         print(req, x, y)
                         await sendMessage("\n".join(req), me)
@@ -140,7 +160,7 @@ async def MUDhandler(reader, writer):
                             await sendMessage("\n".join(req), me)
 
                     case ["attack", name, weapon]:
-                        req, sendAll = attack(name, weapon)
+                        req, sendAll = attack(name, weapon, positions[me])
                         if sendAll:
                             await sendMessage("\n".join(req))
                         else:

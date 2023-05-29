@@ -7,6 +7,7 @@ import cmd
 import shlex
 import cowsay
 
+socketCow = None
 recieving = True
 weapons = {"sword": 10, "spear": 15, "axe": 20}
 userMonsters = {"jgsbat"}
@@ -122,6 +123,7 @@ class MUD(cmd.Cmd):
 
 def main():
     """Сonnect to server, register and start cmd."""
+    global socketCow
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as socketCow:
         socketCow.connect(("localhost", 1337))
         if nickname := sys.argv[1]:
