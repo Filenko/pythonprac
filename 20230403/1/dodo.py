@@ -1,10 +1,13 @@
+import shutil
+import glob
 DOIT_CONFIG = {"default_tasks": ["html"]}
+
+
 def task_html():
+    """Make HTML documentation."""
     return {
-        'actions': [
-            'make html',
-            ],
-        }
+            'actions': ['sphinx-build -M html docs/source docs/build']
+           }
 
 
 def task_wheel_server():

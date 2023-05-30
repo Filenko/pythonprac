@@ -1,7 +1,7 @@
 MUD Server
 ===========
 
-.. automodule:: moodserver.moodserver
+.. automodule:: moodserver.moodserver.moodserver
    :members:
    :undoc-members:
    :show-inheritance:
