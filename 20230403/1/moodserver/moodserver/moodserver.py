@@ -280,6 +280,18 @@ async def MUDhandler(reader, writer):
                         msg = " ".join(msg)
                         await sendMessage(f"\n{nicknames[me]}:{msg}")
 
+                    case ["exit",]:
+                        await clients[me].put("exit")
+                        for client in clients:
+                            if client != me:
+                                await sendMessage(f"{nicknames[me]} has disconnected from MUD")
+                        receive.cancel()
+                        writer.close()
+                        await writer.wait_closed()
+                        del positions[me]
+                        del clients[me]
+                        del nicknames[me]
+
             elif q is receive:
                 receive = asyncio.create_task(clients[me].get())
                 writer.write(f"{q.result()}\n".encode())

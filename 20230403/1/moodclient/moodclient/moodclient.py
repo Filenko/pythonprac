@@ -42,7 +42,12 @@ def recieve(prompt="> "):
     global recieving
     global socketCow
     while recieving:
-        msg = socketCow.recv(1024).decode()
+        try:
+            msg = socketCow.recv(1024).decode()
+        except OSError:
+            continue
+        if msg.strip() == "exit":
+            break
         print(f"{msg.strip()}\n{prompt}", end="", flush=True)
 
 
